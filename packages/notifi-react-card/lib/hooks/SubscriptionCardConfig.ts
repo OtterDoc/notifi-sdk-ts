@@ -145,6 +145,10 @@ export type XMTPTopicTypeItem = {
   XMTPTopics: ValueOrRef<ReadonlyArray<string>>;
 };
 
+/**
+ * Represents the possible types of event items.
+ * @typedef {DirectPushEventTypeItem|BroadcastEventTypeItem|HealthCheckEventTypeItem|LabelEventTypeItem|TradingPairEventTypeItem|WalletBalanceEventTypeItem|PriceChangeEventTypeItem|CustomTopicTypeItem|XMTPTopicTypeItem} EventTypeItem
+ */
 export type EventTypeItem =
   | DirectPushEventTypeItem
   | BroadcastEventTypeItem
@@ -213,6 +217,18 @@ export type CardConfigItemV1 = Readonly<{
 
 export type TitleSubtitleConfigInactive = Readonly<{ active: false }>;
 
+/**
+ * Configuration object for TitleSubtitle component when active.
+ * @typedef {Object} TitleSubtitleConfigActive
+ * @property {boolean} active - Flag indicating if component is active.
+ * @property {string} editView - Name of the view for editing.
+ * @property {string} previewView - Name of the view for previewing.
+ * @property {string} historyView - Name of the view for viewing history.
+ * @property {string} signupView - Name of the view for signing up.
+ * @property {string} expiredView - Name of the view for expired sessions.
+ * @property {string} alertDetailsView - Name of the view for alert details.
+ * @property {string} verifyWalletsView - Name of the view for verifying wallets.
+ */
 export type TitleSubtitleConfigActive = Readonly<{
   active: true;
   editView: string;

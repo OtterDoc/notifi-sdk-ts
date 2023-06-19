@@ -1,3 +1,9 @@
+/**
+ * Returns a string with an ellipsis added in the middle, cutting off the string at a specified index.
+ * @param {string | undefined} str - The input string to be shortened.
+ * @param {number} [index=6] - The index at which to cut off the string. Defaults to 6.
+ * @returns {string | undefined} - The shortened string with an ellipsis added in the middle.
+ */
 export function addressEllipsis(
   str: string | undefined,
   index?: number,

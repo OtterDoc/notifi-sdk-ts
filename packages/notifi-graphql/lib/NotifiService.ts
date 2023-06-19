@@ -95,6 +95,12 @@ export class NotifiService
     return this._typedClient.broadcastMessage(variables, headers);
   }
 
+  /**
+   * Completes a login by transaction.
+   * @async
+   * @param {Generated.CompleteLogInByTransactionMutationVariables} variables - The variables for the login transaction.
+   * @returns {Promise<Generated.CompleteLogInByTransactionMutation>} - The result of the login transaction.
+   */
   async completeLogInByTransaction(
     variables: Generated.CompleteLogInByTransactionMutationVariables,
   ): Promise<Generated.CompleteLogInByTransactionMutation> {
@@ -381,6 +387,12 @@ export class NotifiService
     return this._typedClient.getWebhookTargets(variables, headers);
   }
 
+  /**
+   * Logs in from a Dapp using the provided variables and returns a Promise of the resulting mutation.
+   * @async
+   * @param {Generated.LogInFromDappMutationVariables} variables - The variables to be used in the mutation.
+   * @returns {Promise<Generated.LogInFromDappMutation>} - A Promise of the resulting mutation.
+   */
   async logInFromDapp(
     variables: Generated.LogInFromDappMutationVariables,
   ): Promise<Generated.LogInFromDappMutation> {
@@ -393,6 +405,12 @@ export class NotifiService
     return result;
   }
 
+  /**
+   * Logs in from a service using the provided variables and returns a Promise that resolves to a LogInFromServiceMutation.
+   * @async
+   * @param {Generated.LogInFromServiceMutationVariables} variables - The variables to use for logging in.
+   * @returns {Promise<Generated.LogInFromServiceMutation>} - A Promise that resolves to a LogInFromServiceMutation.
+   */
   async logInFromService(
     variables: Generated.LogInFromServiceMutationVariables,
   ): Promise<Generated.LogInFromServiceMutation> {
@@ -405,6 +423,12 @@ export class NotifiService
     return result;
   }
 
+  /**
+   * Refreshes authorization using provided variables and headers.
+   * @async
+   * @param {Generated.RefreshAuthorizationMutationVariables} variables - The variables for refreshing authorization.
+   * @returns {Promise<Generated.RefreshAuthorizationMutation>} The refreshed authorization mutation.
+   */
   async refreshAuthorization(
     variables: Generated.RefreshAuthorizationMutationVariables,
   ): Promise<Generated.RefreshAuthorizationMutation> {
@@ -465,6 +489,10 @@ export class NotifiService
     return this._typedClient.updateTargetGroup(variables, headers);
   }
 
+  /**
+   * Generates request headers with a unique request ID and optional JWT authorization.
+   * @returns {HeadersInit} headers - Object containing request headers.
+   */
   private _requestHeaders(): HeadersInit {
     const requestId = uuid();
     const headers: HeadersInit = { 'X-Request-Id': requestId };

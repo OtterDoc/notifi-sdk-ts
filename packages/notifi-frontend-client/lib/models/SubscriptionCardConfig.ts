@@ -147,6 +147,10 @@ export type CreateSupportConversationEventTypeItem = {
   alertFrequency: AlertFrequency;
 };
 
+/**
+ * Type alias for various event types.
+ * @typedef {DirectPushEventTypeItem | BroadcastEventTypeItem | HealthCheckEventTypeItem | TradingPairEventTypeItem | LabelEventTypeItem | PriceChangeEventTypeItem | CustomTopicTypeItem | FusionEventTypeItem | WalletBalanceEventTypeItem | XMTPTopicTypeItem | CreateSupportConversationEventTypeItem} EventTypeItem
+ */
 export type EventTypeItem =
   | DirectPushEventTypeItem
   | BroadcastEventTypeItem
@@ -217,6 +221,19 @@ export type CardConfigItemV1 = Readonly<{
 
 export type TitleSubtitleConfigInactive = Readonly<{ active: false }>;
 
+/**
+ * Represents the configuration for a TitleSubtitle component when it is active.
+ * @readonly
+ * @typedef {Object} TitleSubtitleConfigActive
+ * @property {boolean} active - Indicates whether the component is active or not.
+ * @property {string} editView - The view used for editing the component.
+ * @property {string} previewView - The view used for previewing the component.
+ * @property {string} historyView - The view used for displaying the component's history.
+ * @property {string} signupView - The view used for signing up to the component.
+ * @property {string} expiredView - The view used for displaying the component when it has expired.
+ * @property {string} alertDetailsView - The view used for displaying the component's alert details.
+ * @property {string} verifyWalletsView - The view used for verifying wallets associated with the component.
+ */
 export type TitleSubtitleConfigActive = Readonly<{
   active: true;
   editView: string;

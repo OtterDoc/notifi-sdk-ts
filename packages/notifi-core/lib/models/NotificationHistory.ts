@@ -91,6 +91,10 @@ export type WalletsActivityReportWallet = Extract<
   { __typename: 'WalletsActivityReportWallet' }
 >;
 
+/**
+ * Type alias for the possible details of an entry event.
+ * @typedef {AccountBalanceChangedEventDetails | BroadcastMessageEventDetails | ChatMessageReceivedEventDetails | DAOProposalChangedEventDetails | DirectTenantMessageEventDetails | GenericEventDetails | HealthValueOverThresholdEventDetails | NftAuctionChangedEventDetails | NftCollectionsReportEventDetails | WalletsActivityReportEventDetails} EntryDetailType
+ */
 export type EntryDetailType =
   | AccountBalanceChangedEventDetails
   | BroadcastMessageEventDetails

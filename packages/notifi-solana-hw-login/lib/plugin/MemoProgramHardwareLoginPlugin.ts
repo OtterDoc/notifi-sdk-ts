@@ -13,6 +13,14 @@ type MemoProgramHardwareLoginPluginParams = Readonly<{
   sendTransaction: WalletContextState['sendTransaction'];
 }>;
 
+/**
+ * Represents a Memo Program Hardware Login Plugin.
+ * @class
+ * @implements {HardwareLoginPlugin}
+ * @param {MemoProgramHardwareLoginPluginParams} params - The parameters for the plugin.
+ * @property {MemoProgramHardwareLoginPluginParams} params - The parameters for the plugin.
+ * @property {(message: string) => Promise<string>} sendMessage - Sends a transaction message and returns the signature.
+ */
 export class MemoProgramHardwareLoginPlugin implements HardwareLoginPlugin {
   params: MemoProgramHardwareLoginPluginParams;
 
@@ -20,6 +28,11 @@ export class MemoProgramHardwareLoginPlugin implements HardwareLoginPlugin {
     this.params = params;
   }
 
+  /**
+   * Sends a message transaction to the blockchain.
+   * @param {string} message - The message to be sent.
+   * @returns {Promise<string>} - The signature of the transaction.
+   */
   sendMessage: (message: string) => Promise<string> = async (message) => {
     const { walletPublicKey, connection, sendTransaction } = this.params;
 

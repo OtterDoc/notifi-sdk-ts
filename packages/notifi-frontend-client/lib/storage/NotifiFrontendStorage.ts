@@ -34,6 +34,17 @@ const KEY_ROLES = 'roles';
 
 export type NotifiStorage = AuthorizationStorage & RolesStorage;
 
+/**
+ * Implementation of the NotifiStorage interface for frontend storage using a StorageDriver.
+ * @class
+ * @implements {NotifiStorage}
+ * @param {StorageDriver} _driver - The storage driver to use.
+ * @returns {void}
+ * @remarks This class provides methods for getting and setting authorization and roles data in the frontend storage using a StorageDriver.
+ * @example
+ * const storage = new NotifiFrontendStorage(localStorageDriver);
+ * storage.getAuthorization().then(auth => console.log(auth));
+ */
 export class NotifiFrontendStorage implements NotifiStorage {
   constructor(private _driver: StorageDriver) {}
 
