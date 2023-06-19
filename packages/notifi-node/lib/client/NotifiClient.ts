@@ -16,6 +16,11 @@ import {
 class NotifiClient {
   constructor(private service: NotifiService) {}
 
+  /**
+   * Logs in a user using the provided input and returns an Authorization object.
+   * @param input - The input object containing user login information.
+   * @returns A Promise that resolves to an Authorization object.
+   */
   logIn: (
     input: Gql.LogInFromServiceMutationVariables['input'],
   ) => Promise<Authorization> = async (input) => {
@@ -27,6 +32,15 @@ class NotifiClient {
     return authorization;
   };
 
+  /**
+   * Sends a simple health threshold message payload to the service.
+   * @param {string} jwt - The JSON Web Token for authentication.
+   * @param {Object} params - An object containing the following properties:
+   * @param {string} key - The message key.
+   * @param {string} walletPublicKey - The public key of the wallet.
+   * @param {WalletBlockchain} walletBlockchain - The blockchain of the wallet.
+   * @returns {Promise<void>} - A Promise that resolves with no value.
+   */
   sendSimpleHealthThreshold: (
     jwt: string,
     params: Readonly<{
@@ -55,6 +69,14 @@ class NotifiClient {
     }
   };
 
+  /**
+   * Sends a broadcast message using the provided JWT and parameters.
+   * @param {string} jwt - The JWT token to use for authentication.
+   * @param {Object} params - The parameters for the broadcast message, with the following properties:
+   * - recipient: The recipient of the message.
+   * - message: The message to broadcast.
+   * @returns {Promise<void>} - A Promise that resolves when the message has been successfully broadcasted.
+   */
   sendBroadcastMessage: (
     jwt: string,
     params: Omit<
@@ -75,6 +97,24 @@ class NotifiClient {
     }
   };
 
+  /**
+   * Sends a direct push notification to a wallet.
+   * @async
+   * @function
+   * @param {string} jwt - The JWT token.
+   * @param {Object} params - The parameters for the direct push notification.
+   * @param {string} params.key - The message key.
+   * @param {string} params.walletPublicKey - The public key of the wallet.
+   * @param {WalletBlockchain} params.walletBlockchain - The blockchain of the wallet.
+   * @param {string} [params.message] - The message to send.
+   * @param {string} [params.type] - The type of message.
+   * @param {Object} [params.template] - The message template.
+   * @param {string} [params.template.emailTemplate] - The email template.
+   * @param {string} [params.template.smsTemplate] - The SMS template.
+   * @param {string} [params.template.telegramTemplate] - The Telegram template.
+   * @param {Object.<string, string>} [params.template.variables] - The variables for the message template.
+   * @returns {Promise<void>} - A Promise that resolves when the message is sent.
+   */
   sendDirectPush: (
     jwt: string,
     params: Readonly<{
@@ -130,6 +170,12 @@ class NotifiClient {
     }
   };
 
+  /**
+   * Deletes a user alert using the provided JWT and parameters.
+   * @param {string} jwt - The JWT token for authentication.
+   * @param {Gql.DeleteUserAlertMutationVariables} params - The parameters for the delete operation.
+   * @returns {Promise<string>} - The ID of the deleted alert.
+   */
   deleteUserAlert: (
     jwt: string,
     params: Gql.DeleteUserAlertMutationVariables,
@@ -143,6 +189,12 @@ class NotifiClient {
     return deletedId;
   };
 
+  /**
+   * Creates a new tenant user using the provided JWT and input parameters.
+   * @param {string} jwt - The JWT token for authentication.
+   * @param {Gql.CreateTenantUserMutationVariables['input']} input - The input parameters for creating the tenant user.
+   * @returns {Promise<string>} The ID of the created tenant user.
+   */
   createTenantUser: (
     jwt: string,
     params: Gql.CreateTenantUserMutationVariables['input'],
@@ -161,6 +213,12 @@ class NotifiClient {
   };
 
   // TODO: Deprecate ManagedAlert type
+  /**
+   * Creates a direct push alert.
+   * @param {string} jwt - The JSON Web Token.
+   * @param {Gql.CreateDirectPushAlertMutationVariables['input']} params - The input parameters for creating the alert.
+   * @returns {Promise<ManagedAlert>} A promise that resolves to the created alert.
+   */
   createDirectPushAlert: (
     jwt: string,
     params: Gql.CreateDirectPushAlertMutationVariables['input'],
@@ -180,6 +238,12 @@ class NotifiClient {
   };
 
   // TODO: Deprecate ManagedAlert type
+  /**
+   * Deletes a direct push alert and returns a ManagedAlert object.
+   * @param {string} jwt - JSON Web Token for authentication.
+   * @param {Gql.DeleteDirectPushAlertMutationVariables['input']} params - Input variables for the mutation.
+   * @returns {Promise<ManagedAlert>} - Promise that resolves to a ManagedAlert object.
+   */
   deleteDirectPushAlert: (
     jwt: string,
     params: Gql.DeleteDirectPushAlertMutationVariables['input'],
@@ -196,6 +260,12 @@ class NotifiClient {
     };
   };
 
+  /**
+   * Retrieves the connected wallet for a given tenant.
+   * @param {string} jwt - The JSON Web Token for authentication.
+   * @param {Gql.GetTenantConnectedWalletQueryVariables} params - The parameters for the query.
+   * @returns {Promise<GetTenantConnectedWalletResult>} The connected wallet for the tenant.
+   */
   getTenantConnectedWallet: (
     jwt: string,
     params: Gql.GetTenantConnectedWalletQueryVariables,
@@ -210,6 +280,12 @@ class NotifiClient {
     return connection;
   };
 
+  /**
+   * Retrieves a tenant user using a JWT and query parameters.
+   * @param {string} jwt - The JSON Web Token used for authentication.
+   * @param {Gql.GetTenantUserQueryVariables} params - The query parameters for retrieving the tenant user.
+   * @returns {Promise<GetTenantUserResult>} - A Promise that resolves with the retrieved tenant user.
+   */
   getTenantUser: (
     jwt: string,
     params: Gql.GetTenantUserQueryVariables,
@@ -224,6 +300,16 @@ class NotifiClient {
     return connection;
   };
 
+  /**
+   * Creates a tenant balance change alert.
+   * @async
+   * @param {string} jwt - The JSON Web Token.
+   * @param {Object} params - The parameters for the alert.
+   * @param {string} params.name - The name of the alert.
+   * @param {Object} params.webhook - The webhook target for the alert.
+   * @returns {Promise<Object>} The created or updated alert.
+   * @throws {Error} If unable to fetch existing alerts, unable to locate BALANCE filter, incompatible alert filterType, or failed to create alert.
+   */
   createTenantBalanceChangeAlert: (
     jwt: string,
     params: Readonly<{
@@ -284,6 +370,12 @@ class NotifiClient {
     return alert;
   };
 
+  /**
+   * Adds a source to a source group using the provided JWT and input variables.
+   * @param {string} jwt - The JWT token for authentication.
+   * @param {Gql.AddSourceToSourceGroupMutationVariables['input']} input - The input variables for the mutation.
+   * @returns {Promise<Gql.SourceGroupFragmentFragment>} - A promise that resolves to the updated source group.
+   */
   addSourceToSourceGroup: (
     jwt: string,
     input: Gql.AddSourceToSourceGroupMutationVariables['input'],
@@ -297,6 +389,12 @@ class NotifiClient {
     return result.addSourceToSourceGroup;
   };
 
+  /**
+   * Removes a source from a source group.
+   * @param {string} jwt - The JSON Web Token for authentication.
+   * @param {Gql.RemoveSourceFromSourceGroupMutationVariables['input']} input - The input variables for the mutation.
+   * @returns {Promise<Gql.SourceGroupFragmentFragment>} - A promise that resolves with the updated source group.
+   */
   removeSourceFromSourceGroup: (
     jwt: string,
     input: Gql.RemoveSourceFromSourceGroupMutationVariables['input'],
@@ -310,6 +408,12 @@ class NotifiClient {
     return result.removeSourceFromSourceGroup;
   };
 
+  /**
+   * Returns a Promise that resolves to a Gql.SourceGroupFragmentFragment object.
+   * @param {string} name - The name of the source group to get or create.
+   * @returns {Promise<Gql.SourceGroupFragmentFragment>} - The existing or newly created source group.
+   * @throws {Error} - If the operation to get or create the source group fails.
+   */
   getOrCreateSourceGroup: (
     name: string,
   ) => Promise<Gql.SourceGroupFragmentFragment> = async (name) => {
@@ -333,6 +437,14 @@ class NotifiClient {
     return createResult.createSourceGroup;
   };
 
+  /**
+   * Creates a new target group or updates an existing one with the provided name and webhook target.
+   * @async
+   * @function
+   * @param {string} name - The name of the target group.
+   * @param {Gql.WebhookTargetFragmentFragment} webhookTarget - The webhook target to add to the target group.
+   * @returns {Promise<Gql.TargetGroupFragmentFragment>} The created or updated target group.
+   */
   getOrCreateTargetGroup: (
     name: string,
     webhookTarget: Gql.WebhookTargetFragmentFragment,
@@ -365,6 +477,12 @@ class NotifiClient {
     return createResult.createTargetGroup;
   };
 
+  /**
+   * Retrieves a list of sources based on the provided JWT and query variables.
+   * @param {string} jwt - The JWT token for authentication.
+   * @param {object} variables - The query variables for the GraphQL query, including 'input', 'after', and 'first'.
+   * @returns {Promise<Array>} - A promise that resolves to an array of sources.
+   */
   getSourceConnection: (
     jwt: string,
     variables: Gql.GetSourceConnectionQueryVariables['input'] &
@@ -386,6 +504,12 @@ class NotifiClient {
       return result.sources;
     };
 
+  /**
+   * Updates a target group with a webhook and returns the updated target group.
+   * @param {object} targetGroup - The target group to be updated.
+   * @param {object} webhook - The webhook to be added to the target group.
+   * @returns {Promise<object>} - The updated target group.
+   */
   updateTargetGroup: (
     targetGroup: Gql.TargetGroupFragmentFragment,
     webhook: Gql.WebhookTargetFragmentFragment,
@@ -411,6 +535,12 @@ class NotifiClient {
     return updated;
   };
 
+  /**
+   * Creates or updates a webhook target with the given parameters.
+   *
+   * @param {Gql.CreateWebhookTargetMutationVariables} params - The parameters for creating or updating the webhook target.
+   * @returns {Promise<Gql.WebhookTargetFragmentFragment>} The created or updated webhook target.
+   */
   createOrUpdateWebhook: (
     params: Gql.CreateWebhookTargetMutationVariables,
   ) => Promise<Gql.WebhookTargetFragmentFragment> = async (params) => {

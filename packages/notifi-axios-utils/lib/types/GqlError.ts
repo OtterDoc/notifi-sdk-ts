@@ -21,6 +21,15 @@ const packageErrors = (
   return messages;
 };
 
+/**
+ * Represents an error that occurred during a GraphQL operation.
+ * @class
+ * @extends Error
+ * @param {string} operationName - The name of the GraphQL operation that caused the error.
+ * @param {ReadonlyArray<unknown>} errors - An array of errors that occurred during the operation.
+ * @returns {GqlError} - A new instance of the GqlError class.
+ * @remarks Use the getErrorMessages method to retrieve an array of error messages from the errors array.
+ */
 export default class GqlError extends Error {
   constructor(
     public operationName: string,

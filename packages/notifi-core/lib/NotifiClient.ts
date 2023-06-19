@@ -26,6 +26,20 @@ import {
   SendConversationMessageInput,
 } from './operations';
 
+/**
+ * Represents the data of a client.
+ * @typedef {Object} ClientData
+ * @property {ReadonlyArray<Alert>} alerts - An array of alerts.
+ * @property {ReadonlyArray<Types.ConnectedWalletFragmentFragment>} connectedWallets - An array of connected wallets.
+ * @property {ReadonlyArray<Types.EmailTargetFragmentFragment>} emailTargets - An array of email targets.
+ * @property {ReadonlyArray<Types.FilterFragmentFragment>} filters - An array of filters.
+ * @property {ReadonlyArray<Types.SmsTargetFragmentFragment>} smsTargets - An array of SMS targets.
+ * @property {ReadonlyArray<Types.SourceFragmentFragment>} sources - An array of sources.
+ * @property {ReadonlyArray<Types.SourceGroupFragmentFragment>} sourceGroups - An array of source groups.
+ * @property {ReadonlyArray<Types.TargetGroupFragmentFragment>} targetGroups - An array of target groups.
+ * @property {ReadonlyArray<Types.TelegramTargetFragmentFragment>} telegramTargets - An array of Telegram targets.
+ * @property {ReadonlyArray<Types.DiscordTargetFragmentFragment>} discordTargets - An array of Discord targets.
+ */
 export type ClientData = Readonly<{
   alerts: ReadonlyArray<Alert>;
   connectedWallets: ReadonlyArray<Types.ConnectedWalletFragmentFragment>;
@@ -55,6 +69,19 @@ export type ValueItemConfig = Readonly<{
   value: string;
 }>;
 
+/**
+ * Defines the options for filtering alerts.
+ * @typedef {Object} FilterOptions
+ * @property {AlertFrequency} [alertFrequency] - The frequency of alerts.
+ * @property {string} [directMessageType] - The type of direct message.
+ * @property {number} [threshold] - The threshold value for the alert.
+ * @property {string} [delayProcessingUntil] - The time to delay processing until.
+ * @property {ThresholdDirection} [thresholdDirection] - The direction of the threshold.
+ * @property {Object} [values] - The values to filter by.
+ * @property {Array<ValueItemConfig>} [values.and] - The values to filter by using the AND operator.
+ * @property {Array<ValueItemConfig>} [values.or] - The values to filter by using the OR operator.
+ * @property {string} [tradingPair] - The trading pair to filter by.
+ */
 export type FilterOptions = Partial<{
   alertFrequency: AlertFrequency;
   directMessageType: string;
@@ -119,18 +146,23 @@ export type ClientUpdateAlertInput = Readonly<{
  * Input param for creating an Alert
  *
  * @remarks
- * This describes the Alert to be created based on name, emailAddress, phoneNumber and/or telegramId
+ * This describes the Alert to be created based on name, sourceId, filterId, filterOptions, emailAddress, phoneNumber, telegramId, groupName, targetGroupName, webhook, sourceIds, sourceGroupName and discordId.
  *
  * @property name - Friendly name (must be unique)
- * @property sourceGroupId - The SourceGroup to associate
+ * @property sourceId - The SourceGroup to associate
  * @property filterId - The Filter to associate
+ * @property filterOptions - The filter options to be used
  * @property emailAddress - The emailAddress to be used
  * @property phoneNumber - The phone number to be used
  * @property telegramId - The Telegram account username to be used
- * @property discordId - The the discord id to be used
- * <br>
- * <br>
- * See [Alert Creation Guide]{@link https://notifi-network.github.io/notifi-sdk-ts/} for more information on creating Alerts
+ * @property groupName - The group name to be used
+ * @property targetGroupName - The target group name to be used
+ * @property webhook - The webhook params to be used
+ * @property sourceIds - The source ids to be used
+ * @property sourceGroupName - The source group name to be used
+ * @property discordId - The discord id to be used
+ *
+ * @see [Alert Creation Guide]{@link https://notifi-network.github.io/notifi-sdk-ts/} for more information on creating Alerts
  */
 export type ClientCreateAlertInput = Readonly<{
   name: string;
@@ -262,6 +294,32 @@ export type AcalaSignMessageFunction = (
   message: string,
 ) => Promise<hexString>;
 
+/**
+ * Type alias for sign message parameters.
+ *
+ * @property {string} walletBlockchain - The blockchain name for the wallet.
+ * @property {Uint8SignMessageFunction | AptosSignMessageFunction | AcalaSignMessageFunction} signMessage - The function to sign the message.
+ *
+ * @typedef {Readonly<{
+ * walletBlockchain: 'SOLANA';
+ * signMessage: Uint8SignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'ETHEREUM' | 'POLYGON' | 'ARBITRUM' | 'AVALANCHE' | 'BINANCE' | 'INJECTIVE' | 'OPTIMISM';
+ * signMessage: Uint8SignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'APTOS';
+ * signMessage: AptosSignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'ACALA';
+ * signMessage: AcalaSignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'NEAR';
+ * signMessage: Uint8SignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'SUI';
+ * signMessage: Uint8SignMessageFunction;
+ * }>] SignMessageParams
+ */
 export type SignMessageParams =
   | Readonly<{
       walletBlockchain: 'SOLANA';
@@ -295,6 +353,13 @@ export type SignMessageParams =
       signMessage: Uint8SignMessageFunction;
     }>;
 
+/**
+ * Defines the parameters for a wallet, including the blockchain type and associated public key and/or account address.
+ * @typedef {Object} WalletParams
+ * @property {('SOLANA'|'ETHEREUM'|'POLYGON'|'ARBITRUM'|'AVALANCHE'|'BINANCE'|'OPTIMISM'|'APTOS'|'ACALA'|'NEAR'|'SUI'|'INJECTIVE')} walletBlockchain - The type of blockchain associated with the wallet.
+ * @property {string} walletPublicKey - The public key associated with the wallet.
+ * @property {string} accountAddress - The account address associated with the wallet.
+ */
 export type WalletParams =
   | Readonly<{
       walletBlockchain: 'SOLANA';
@@ -337,6 +402,32 @@ export type WalletParams =
       walletPublicKey: string;
     }>;
 
+/**
+ * Represents a wallet object with sign message function for various blockchain networks.
+ * @typedef {Object} WalletWithSignMessage
+ * @property {'SOLANA'} walletBlockchain - The blockchain network for Solana.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ * @property {'ETHEREUM' | 'POLYGON' | 'ARBITRUM' | 'AVALANCHE' | 'BINANCE' | 'OPTIMISM'} walletBlockchain - The blockchain network for Ethereum, Polygon, Arbitrum, Avalanche, Binance, and Optimism.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ * @property {'APTOS'} walletBlockchain - The blockchain network for Aptos.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {AptosSignMessageFunction} signMessage - The sign message function for Aptos.
+ * @property {'ACALA'} walletBlockchain - The blockchain network for Acala.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {AcalaSignMessageFunction} signMessage - The sign message function for Acala.
+ * @property {'NEAR'} walletBlockchain - The blockchain network for Near.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ * @property {'SUI'} walletBlockchain - The blockchain network for Sui.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ */
 export type WalletWithSignMessage =
   | Readonly<{
       walletBlockchain: 'SOLANA';
@@ -390,6 +481,34 @@ export type ConnectWalletParams = Readonly<{
   connectWalletConflictResolutionTechnique: ConnectWalletInput['connectWalletConflictResolutionTechnique'];
 }>;
 
+/**
+ * Type alias for the NotifiClient object, which represents a client for interacting with the Notifi API.
+ * @readonly
+ * @property {() => Promise<BeginLoginViaTransactionResult>} beginLoginViaTransaction - A function that begins the login process via transaction.
+ * @property {(input: ClientBroadcastMessageInput, signer: SignMessageParams) => Promise<string | null>} broadcastMessage - A function that broadcasts a message using the provided input and signer.
+ * @property {(input: CompleteLoginViaTransactionInput) => Promise<CompleteLoginViaTransactionResult>} completeLoginViaTransaction - A function that completes the login process via transaction.
+ * @property {(forceFetch?: boolean) => Promise<ClientData>} fetchData - A function that fetches client data, optionally forcing a fetch.
+ * @property {(signer: SignMessageParams) => Promise<User>} logIn - A function that logs in a user using the provided signer.
+ * @property {() => Promise<void>} logOut - A function that logs out the current user.
+ * @property {(input: ConnectWalletParams) => Promise<ConnectedWallet>} connectWallet - A function that connects a wallet using the provided input.
+ * @property {(input: ClientCreateAlertInput) => Promise<Alert>} createAlert - A function that creates an alert using the provided input.
+ * @property {(input: Types.CreateSourceInput) => Promise<Types.SourceFragmentFragment>} createSource - A function that creates a source using the provided input.
+ * @property {() => Promise<SupportConversation>} createSupportConversation - A function that creates a support conversation.
+ * @property {(input: ClientCreateMetaplexAuctionSourceInput) => Promise<Types.SourceFragmentFragment>} createMetaplexAuctionSource - A function that creates a Metaplex auction source using the provided input.
+ * @property {(input: ClientCreateBonfidaAuctionSourceInput) => Promise<Types.SourceFragmentFragment>} createBonfidaAuctionSource - A function that creates a Bonfida auction source using the provided input.
+ * @property {(input: ClientDeleteAlertInput) => Promise<string>} deleteAlert - A function that deletes an alert using the provided input.
+ * @property {() => Promise<ClientConfiguration>} getConfiguration - A function that gets the client configuration.
+ * @property {(input: GetNotificationHistoryInput) => Promise<NotificationHistory>} getNotificationHistory - A function that gets the notification history using the provided input.
+ * @property {() => Promise<ReadonlyArray<UserTopic>>} getTopics - A function that gets the user topics.
+ * @property {(input: ClientUpdateAlertInput) => Promise<Alert>} updateAlert - A function that updates an alert using the provided input.
+ * @property {(input: ClientEnsureTargetGroupInput) => Promise<TargetGroup>} ensureTargetGroup - A function that ensures a target group using the provided input.
+ * @property {(input: ClientEnsureSourceGroupInput) => Promise<SourceGroup>} ensureSourceGroup - A function that ensures a source group using the provided input.
+ * @property {(input: SendConversationMessageInput) => Promise<ConversationMessagesEntry>} sendConversationMessages - A function that sends conversation messages using the provided input.
+ * @property {(input: ClientSendVerificationEmailInput) => Promise<string>} sendEmailTargetVerification - A function that sends a verification email to a target using the provided input.
+ * @property {(input: ClientFetchSubscriptionCardInput) => Promise<TenantConfig>} fetchSubscriptionCard - A function that fetches a subscription card using the provided input.
+ * @property {(input: GetConversationMessagesFullInput) => Promise<ConversationMessages>} getConversationMessages - A function that gets the conversation messages using the provided input.
+ * @property {(input: string) => Promise<string | undefined>} createDiscordTarget - A function that creates a Discord target using the provided input.
+ */
 export type NotifiClient = Readonly<{
   beginLoginViaTransaction: () => Promise<BeginLoginViaTransactionResult>;
   broadcastMessage: (

@@ -45,6 +45,14 @@ export type NotifiAxiosServiceConfig = Readonly<{
   gqlUrl: string;
 }>;
 
+/**
+ * Implementation of the NotifiService interface using Axios for HTTP requests.
+ * @class
+ * @implements {NotifiService}
+ * @param {NotifiAxiosServiceConfig} c - Configuration object for the service.
+ * @returns {void}
+ * @remarks This class provides methods for interacting with the Notifi API using Axios for HTTP requests. It also includes a private jwt property for storing the JWT token used for authorization.
+ */
 export class NotifiAxiosService implements NotifiService {
   beginLogInByTransaction: NotifiService['beginLogInByTransaction'];
   broadcastMessage: NotifiService['broadcastMessage'];

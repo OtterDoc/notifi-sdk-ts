@@ -30,6 +30,32 @@ import {
   ensureWebhook,
 } from './ensureTarget';
 
+/**
+ * Type alias for sign message parameters.
+ *
+ * @property {string} walletBlockchain - The blockchain name for the wallet.
+ * @property {Uint8SignMessageFunction | AptosSignMessageFunction | AcalaSignMessageFunction} signMessage - The function to sign the message.
+ *
+ * @typedef {Readonly<{
+ * walletBlockchain: 'SOLANA';
+ * signMessage: Uint8SignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'ETHEREUM' | 'POLYGON' | 'ARBITRUM' | 'AVALANCHE' | 'BINANCE' | 'INJECTIVE' | 'OPTIMISM';
+ * signMessage: Uint8SignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'APTOS';
+ * signMessage: AptosSignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'ACALA';
+ * signMessage: AcalaSignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'NEAR';
+ * signMessage: Uint8SignMessageFunction;
+ * }> | Readonly<{
+ * walletBlockchain: 'SUI';
+ * signMessage: Uint8SignMessageFunction;
+ * }>] SignMessageParams
+ */
 export type SignMessageParams =
   | Readonly<{
       walletBlockchain: 'SOLANA';
@@ -68,6 +94,32 @@ export type WalletWithSignParams = Readonly<{
 }> &
   WalletWithSignMessage;
 
+/**
+ * Represents a wallet object with sign message function for various blockchain networks.
+ * @typedef {Object} WalletWithSignMessage
+ * @property {'SOLANA'} walletBlockchain - The blockchain network for Solana.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ * @property {'ETHEREUM' | 'POLYGON' | 'ARBITRUM' | 'AVALANCHE' | 'BINANCE' | 'OPTIMISM'} walletBlockchain - The blockchain network for Ethereum, Polygon, Arbitrum, Avalanche, Binance, and Optimism.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ * @property {'APTOS'} walletBlockchain - The blockchain network for Aptos.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {AptosSignMessageFunction} signMessage - The sign message function for Aptos.
+ * @property {'ACALA'} walletBlockchain - The blockchain network for Acala.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {AcalaSignMessageFunction} signMessage - The sign message function for Acala.
+ * @property {'NEAR'} walletBlockchain - The blockchain network for Near.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ * @property {'SUI'} walletBlockchain - The blockchain network for Sui.
+ * @property {string} accountAddress - The account address of the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @property {Uint8SignMessageFunction} signMessage - The sign message function for Uint8Array.
+ */
 export type WalletWithSignMessage =
   | Readonly<{
       walletBlockchain: 'SOLANA';
@@ -152,6 +204,13 @@ export const SIGNING_MESSAGE = `Sign in with Notifi \n\n    No password needed o
 
 export type SupportedCardConfigType = CardConfigItemV1;
 
+/**
+ * Represents the state of a user.
+ * @typedef {Object} UserState
+ * @property {'loggedOut'} status - The current status of the user.
+ * @property {Authorization} [authorization] - The authorization object if the user is authenticated or expired.
+ * @property {Roles} [roles] - The roles object if the user is authenticated.
+ */
 export type UserState = Readonly<
   | {
       status: 'loggedOut';
@@ -181,6 +240,10 @@ export class NotifiFrontendClient {
     return this._userState;
   }
 
+  /**
+   * Initializes the UserState by retrieving stored authorization and roles from storage. If no authorization is found, sets the status to 'loggedOut' and returns the resulting UserState. If the stored authorization has expired, sets the status to 'expired' and returns the resulting UserState. If the stored authorization is valid but close to expiration, attempts to refresh the authorization and updates the stored authorization if successful. Finally, sets the status to 'authenticated' and returns the resulting UserState with the retrieved authorization and roles.
+   * @returns {Promise<UserState>} The resulting UserState object.
+   */
   async initialize(): Promise<UserState> {
     const [storedAuthorization, roles] = await Promise.all([
       this._storage.getAuthorization(),
@@ -234,6 +297,10 @@ export class NotifiFrontendClient {
     return userState;
   }
 
+  /**
+   * Logs out the user by setting authorization and roles to null and calling the logOut method of the service.
+   * @returns Promise<UserState> - A promise that resolves to a UserState object with status 'loggedOut'.
+   */
   async logOut(): Promise<UserState> {
     await Promise.all([
       this._storage.setAuthorization(null),
@@ -246,6 +313,13 @@ export class NotifiFrontendClient {
     };
   }
 
+  /**
+   * Logs in a user from a dapp using the provided signMessageParams.
+   * @async
+   * @param {SignMessageParams} signMessageParams - The parameters used to sign the message.
+   * @returns {Promise<Types.UserFragmentFragment>} The logged in user's information.
+   * @throws {string} If login fails.
+   */
   async logIn(
     signMessageParams: SignMessageParams,
   ): Promise<Types.UserFragmentFragment> {
@@ -302,6 +376,14 @@ export class NotifiFrontendClient {
     return loginResult;
   }
 
+  /**
+   * Signs a message using the provided signMessageParams and returns the signature.
+   * @async
+   * @param {Object} params - The parameters for signing the message.
+   * @param {SignMessageParams} params.signMessageParams - The parameters for signing the message.
+   * @param {number} params.timestamp - The timestamp for the message.
+   * @returns {Promise<string>} The signature of the signed message.
+   */
   private async _signMessage({
     signMessageParams,
     timestamp,
@@ -410,6 +492,14 @@ export class NotifiFrontendClient {
     }
   }
 
+  /**
+   * Handles the result of a login attempt.
+   *
+   * @async
+   * @private
+   * @param {Types.UserFragmentFragment | undefined} user - The user object returned from the login attempt.
+   * @returns {Promise<void>} - Resolves when authorization and roles have been saved to storage.
+   */
   private async _handleLogInResult(
     user: Types.UserFragmentFragment | undefined,
   ): Promise<void> {
@@ -432,6 +522,15 @@ export class NotifiFrontendClient {
     return this._service.fetchData({});
   }
 
+  /**
+   * Begins the login process via a transaction.
+   * @async
+   * @param {Object} props - The properties object.
+   * @param {string} props.walletBlockchain - The blockchain of the wallet.
+   * @param {string} props.walletAddress - The address of the wallet.
+   * @returns {Promise<Object>} - The result object containing the nonce.
+   * @throws {Error} - If the login process fails.
+   */
   async beginLoginViaTransaction({
     walletBlockchain,
     walletAddress,
@@ -464,6 +563,13 @@ export class NotifiFrontendClient {
     return { nonce: logValue };
   }
 
+  /**
+   * Completes login via transaction.
+   * @async
+   * @param {CompleteLoginProps} props - Object containing walletBlockchain, walletAddress, and transactionSignature.
+   * @returns {Promise<Types.CompleteLogInByTransactionMutation>} - Promise that resolves to the result of the completeLogInByTransaction mutation.
+   * @throws {Error} - If BeginLoginViaTransaction is not called first.
+   */
   async completeLoginViaTransaction({
     walletBlockchain,
     walletAddress,
@@ -501,6 +607,18 @@ export class NotifiFrontendClient {
     return results;
   }
 
+  /**
+   * Ensures the existence of a target group with the given parameters. If a target group with the same name already exists, it will be updated with the new parameters. Otherwise, a new target group will be created.
+   * @async
+   * @param {Object} params - The parameters for the target group. Required parameter: name. Optional parameters: emailAddress, phoneNumber, telegramId, webhook, discordId.
+   * @param {string} params.name - The name of the target group.
+   * @param {string} [params.emailAddress] - The email address associated with the target group.
+   * @param {string} [params.phoneNumber] - The phone number associated with the target group.
+   * @param {string} [params.telegramId] - The Telegram ID associated with the target group.
+   * @param {Object} [params.webhook] - The webhook associated with the target group. See EnsureWebhookParams type for details.
+   * @param {string} [params.discordId] - The Discord ID associated with the target group.
+   * @returns {Promise<Types.TargetGroupFragmentFragment>} The target group object.
+   */
   async ensureTargetGroup({
     name,
     emailAddress,
@@ -571,6 +689,19 @@ export class NotifiFrontendClient {
     return createMutation.createTargetGroup;
   }
 
+  /**
+   * Updates a target group with new email, SMS, Telegram, webhook, and Discord targets.
+   * @async
+   * @private
+   * @param {Object} options - The options object.
+   * @param {Types.TargetGroupFragmentFragment} options.existing - The existing target group to update.
+   * @param {Array<string>} options.emailTargetIds - The new email target IDs to add to the target group.
+   * @param {Array<string>} options.smsTargetIds - The new SMS target IDs to add to the target group.
+   * @param {Array<string>} options.telegramTargetIds - The new Telegram target IDs to add to the target group.
+   * @param {Array<string>} options.webhookTargetIds - The new webhook target IDs to add to the target group.
+   * @param {Array<string>} options.discordTargetIds - The new Discord target IDs to add to the target group.
+   * @returns {Promise<Types.TargetGroupFragmentFragment>} The updated target group.
+   */
   private async _updateTargetGroup({
     existing,
     emailTargetIds,
@@ -688,6 +819,14 @@ export class NotifiFrontendClient {
     return created;
   }
 
+  /**
+   * Deletes an alert with the given ID.
+   * @async
+   * @param {Object} options - The options object.
+   * @param {string} options.id - The ID of the alert to delete.
+   * @throws {Error} If the alert deletion fails.
+   * @returns {Promise<void>}
+   */
   async deleteAlert({
     id,
   }: Readonly<{
@@ -700,6 +839,11 @@ export class NotifiFrontendClient {
     }
   }
 
+  /**
+   * Updates user wallets and returns the result of ensuring source and filters for the wallet balance event type item.
+   * @async
+   * @returns {Promise<any>} The result of ensuring source and filters for the wallet balance event type item.
+   */
   async updateWallets() {
     const walletEventTypeItem: WalletBalanceEventTypeItem = {
       name: 'User Wallets',
@@ -713,6 +857,16 @@ export class NotifiFrontendClient {
     return result;
   }
 
+  /**
+   * Retrieves the notification history based on the provided query variables.
+   * @async
+   * @param {Types.GetNotificationHistoryQueryVariables} variables - The query variables for retrieving the notification history.
+   * @returns {Promise<{
+   * pageInfo: Types.PageInfoFragmentFragment;
+   * nodes: ReadonlyArray<Types.NotificationHistoryEntryFragmentFragment>;
+   * }>} - A Promise that resolves to an object containing the pageInfo and nodes of the notification history.
+   * @throws {Error} - If the notification history retrieval fails.
+   */
   async getNotificationHistory(
     variables: Types.GetNotificationHistoryQueryVariables,
   ): Promise<
@@ -731,6 +885,14 @@ export class NotifiFrontendClient {
     return { pageInfo, nodes };
   }
 
+  /**
+   * Fetches a subscription card based on the provided parameters.
+   * @async
+   * @function
+   * @param {FindSubscriptionCardParams} variables - The parameters used to find the subscription card.
+   * @returns {Promise<CardConfigType>} - The fetched subscription card.
+   * @throws {Error} - If the tenant config is not found, the config data is invalid, or the config format is unsupported.
+   */
   async fetchSubscriptionCard(
     variables: FindSubscriptionCardParams,
   ): Promise<CardConfigType> {
@@ -769,6 +931,13 @@ export class NotifiFrontendClient {
     return card;
   }
 
+  /**
+   * Copies the authorization and roles from the current storage to another storage instance based on the provided configuration.
+   *
+   * @async
+   * @param {NotifiFrontendConfiguration} config - The configuration object for the storage driver.
+   * @returns {Promise<void>} - A Promise that resolves when the authorization and roles have been successfully copied to the other storage instance.
+   */
   async copyAuthorization(config: NotifiFrontendConfiguration) {
     const auth = await this._storage.getAuthorization();
     const roles = await this._storage.getRoles();
@@ -784,6 +953,13 @@ export class NotifiFrontendClient {
       otherStorage.setRoles(roles),
     ]);
   }
+  /**
+   * Sends an email verification request for a given target ID.
+   * @async
+   * @param {Object} options - The options object.
+   * @param {string} options.targetId - The ID of the target to send the verification request to.
+   * @returns {Promise<string>} - The ID of the verification request.
+   */
   async sendEmailTargetVerification({
     targetId,
   }: Readonly<{ targetId: string }>): Promise<string> {
@@ -798,6 +974,12 @@ export class NotifiFrontendClient {
     return id;
   }
 
+  /**
+   * Subscribes to a wallet using the provided ConnectWalletParams object.
+   * @async
+   * @param {ConnectWalletParams} params - The parameters needed to connect to the wallet.
+   * @returns {Promise<Types.ConnectWalletMutation>} - A Promise that resolves with the connected wallet.
+   */
   async subscribeWallet(
     params: ConnectWalletParams,
   ): Promise<Types.ConnectWalletMutation> {

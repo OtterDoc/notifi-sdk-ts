@@ -6,6 +6,19 @@ import { resolveStringRef } from '../components/subscription/resolveRef';
 import { NotifiSubscriptionData } from '../context';
 import { walletToSource } from './walletUtils';
 
+/**
+ * Represents the configuration for a single source alert.
+ * @typedef {Object} SingleSourceAlertConfiguration
+ * @property {string} type - The type of alert, which is always 'single'.
+ * @property {string} sourceType - The type of source to create for the alert.
+ * @property {Object} createSource - Optional object containing the address and fusion event type ID of the source to create.
+ * @property {string} createSource.address - The address of the source to create.
+ * @property {string} createSource.fusionEventTypeId - The fusion event type ID of the source to create.
+ * @property {string} filterType - The type of filter to apply to the alert.
+ * @property {FilterOptions | null} filterOptions - The filter options to apply to the alert, or null if none are specified.
+ * @property {string} sourceGroupName - Optional name of the source group to assign the alert to.
+ * @property {boolean} maintainSourceGroup - Whether to maintain the source group when the alert is triggered.
+ */
 export type SingleSourceAlertConfiguration = Readonly<{
   type: 'single';
   sourceType: Types.CreateSourceInput['type'];

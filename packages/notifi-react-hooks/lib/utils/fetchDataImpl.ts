@@ -22,6 +22,21 @@ import {
 } from '@notifi-network/notifi-core';
 import { Types } from '@notifi-network/notifi-graphql';
 
+/**
+ * Represents the internal data structure of the application.
+ * @typedef {Object} InternalData
+ * @property {Alert[]} alerts - Array of Alert objects.
+ * @property {ConnectedWallet[]} connectedWallets - Array of ConnectedWallet objects.
+ * @property {Types.FilterFragmentFragment[]} filters - Array of FilterFragmentFragment objects.
+ * @property {Types.SourceFragmentFragment[]} sources - Array of SourceFragmentFragment objects.
+ * @property {SourceGroup[]} sourceGroups - Array of SourceGroup objects.
+ * @property {TargetGroup[]} targetGroups - Array of TargetGroup objects.
+ * @property {EmailTarget[]} emailTargets - Array of EmailTarget objects.
+ * @property {SmsTarget[]} smsTargets - Array of SmsTarget objects.
+ * @property {TelegramTarget[]} telegramTargets - Array of TelegramTarget objects.
+ * @property {WebhookTarget[]} webhookTargets - Array of WebhookTarget objects.
+ * @property {DiscordTarget[]} discordTargets - Array of DiscordTarget objects.
+ */
 export type InternalData = {
   alerts: Alert[];
   connectedWallets: ConnectedWallet[];
@@ -46,6 +61,21 @@ export type TimeProvider = Readonly<{
   now(): number;
 }>;
 
+/**
+ * Type alias for a service that combines multiple services for retrieving data related to alerts, wallets, sources, targets, and notifications.
+ * @typedef {object} Service
+ * @property {function} getAlerts - Retrieves alerts.
+ * @property {function} getConnectedWallets - Retrieves connected wallets.
+ * @property {function} getSources - Retrieves sources.
+ * @property {function} getSourceGroups - Retrieves source groups.
+ * @property {function} getTargetGroups - Retrieves target groups.
+ * @property {function} getEmailTargets - Retrieves email targets.
+ * @property {function} getDiscordTargets - Retrieves Discord targets.
+ * @property {function} getSmsTargets - Retrieves SMS targets.
+ * @property {function} getTelegramTargets - Retrieves Telegram targets.
+ * @property {function} getTopics - Retrieves topics.
+ * @property {function} getWebhookTargets - Retrieves webhook targets.
+ */
 type Service = GetAlertsService &
   GetConnectedWalletsService &
   GetSourcesService &

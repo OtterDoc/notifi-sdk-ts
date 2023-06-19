@@ -12,6 +12,13 @@ export type NotifiEnvironmentConfiguration = Readonly<{
   }>;
 }>;
 
+/**
+ * Represents a configuration object for a wallet with a public key, combined with environment configuration for notifications.
+ * @typedef {Object} NotifiConfigWithPublicKey
+ * @property {('ETHEREUM'|'POLYGON'|'ARBITRUM'|'AVALANCHE'|'BINANCE'|'OPTIMISM'|'SOLANA')} walletBlockchain - The blockchain associated with the wallet.
+ * @property {string} walletPublicKey - The public key of the wallet.
+ * @extends NotifiEnvironmentConfiguration
+ */
 export type NotifiConfigWithPublicKey = Readonly<{
   walletBlockchain:
     | 'ETHEREUM'
@@ -46,6 +53,17 @@ export const checkIsConfigWithPublicKeyAndAddress = (
   return 'accountAddress' in config;
 };
 
+/**
+ * Type alias for the input object used in the ConfigFactory to generate a configuration object with public key and address.
+ * @typedef {Object} ConfigFactoryInputPublicKeyAndAddress
+ * @property {Object} account - An object containing the address and public key of the account.
+ * @property {string} account.address - The address of the account.
+ * @property {string} account.publicKey - The public key of the account.
+ * @property {string} tenantId - The ID of the tenant.
+ * @property {NotifiEnvironment} env - The environment for the configuration.
+ * @property {NotifiConfigWithPublicKeyAndAddress['walletBlockchain']} walletBlockchain - The blockchain used for the wallet.
+ * @property {NotifiEnvironmentConfiguration['storageOption']} [storageOption] - Optional storage option for the configuration.
+ */
 export type ConfigFactoryInputPublicKeyAndAddress = {
   account: Readonly<{
     address: string;

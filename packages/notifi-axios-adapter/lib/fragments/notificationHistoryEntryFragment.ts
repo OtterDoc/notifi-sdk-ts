@@ -1,3 +1,18 @@
+/**
+ * Enum representing the different types of notifications.
+ * @enum {string}
+ * @readonly
+ * @property {string} ACCOUNT_BALANCE_CHANGED - Account balance changed event details.
+ * @property {string} BROADCAST_MESSAGE - Broadcast message event details.
+ * @property {string} DIRECT_TENANT_MESSAGE - Direct tenant message event details.
+ * @property {string} NFT_COLLECTION_REPORT - NFT collections report event details.
+ * @property {string} CHAT_MESSAGE_RECEIVED - Chat message received event details.
+ * @property {string} DAO_PROPOSAL_CHANGED - DAO proposal changed event details.
+ * @property {string} NFT_AUCTION_CHANGED - NFT auction changed event details.
+ * @property {string} WALLETS_ACTIVITY_CHANGED - Wallets activity changed event details.
+ * @property {string} HEALTH_VALUE_OVER_THRESHOLD - Health value over threshold event details.
+ * @property {string} GENERIC_EVENT - Generic event details.
+ */
 export enum NotificationTypeName {
   ACCOUNT_BALANCE_CHANGED = 'AccountBalanceChangedEventDetails',
   BROADCAST_MESSAGE = 'BroadcastMessageEventDetails',
